@@ -32,18 +32,21 @@ class Environment:
                 temp.append(1)
             self.tiles.append(temp)
 
-
-
     def initialize_pop(self, n):
         for i in range(n):
             x = random.uniform(0,1)
             y = random.uniform(0,1)
             self.agents.append(Agent(i, x, y))
+
+    def add_agent(self):
+        x = random.uniform(0,1)
+        y = random.uniform(0,1)
+        self.agents.append(Agent(-1, x, y))
     
     def iterate_physics(self):
         for agent in self.agents:
 
-            #Agent EAT
+            # Agent EAT
             tile_index_x = int(agent.x * TILE_COUNT_WIDTH)
             tile_index_y = int(agent.y * TILE_COUNT_HEIGHT)
             if (0 <= tile_index_x < TILE_COUNT_WIDTH and
@@ -76,4 +79,13 @@ class Environment:
             x = random.randint(0, TILE_COUNT_WIDTH - 1)
             y = random.randint(0, TILE_COUNT_HEIGHT - 1)
             self.tiles[x][y] += random.uniform(0, 1)
+        
+        for i in range(len(self.agents) -1, -1, -1):
+            agent = self.agents[i]
+            if agent.food <= 0:
+                self.agents.pop(i)
+
+        if random.uniform(0,1) < 0.01:
+            self.add_agent()
+
         self.time += 1
